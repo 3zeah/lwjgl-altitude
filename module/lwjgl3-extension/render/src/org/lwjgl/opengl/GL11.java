@@ -5,8 +5,6 @@
  */
 package org.lwjgl.opengl;
 
-import org.jspecify.annotations.*;
-
 import java.nio.*;
 
 import org.lwjgl.*;
@@ -873,7 +871,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl3/glBitmap">Reference Page</a> - <em>This function is deprecated and unavailable in the Core profile</em>
      */
-    public static void glBitmap(@NativeType("GLsizei") int w, @NativeType("GLsizei") int h, @NativeType("GLfloat") float xOrig, @NativeType("GLfloat") float yOrig, @NativeType("GLfloat") float xInc, @NativeType("GLfloat") float yInc, @NativeType("GLubyte const *") @Nullable ByteBuffer data) {
+    public static void glBitmap(@NativeType("GLsizei") int w, @NativeType("GLsizei") int h, @NativeType("GLfloat") float xOrig, @NativeType("GLfloat") float yOrig, @NativeType("GLfloat") float xInc, @NativeType("GLfloat") float yInc, @NativeType("GLubyte const *") ByteBuffer data) {
         if (CHECKS) {
             checkSafe(data, ((w + 7) >> 3) * h);
         }
@@ -3095,7 +3093,7 @@ public class GL11 {
      * @see <a href="https://docs.gl/gl4/glGetString">Reference Page</a>
      */
     @NativeType("GLubyte const *")
-    public static @Nullable String glGetString(@NativeType("GLenum") int name) {
+    public static String glGetString(@NativeType("GLenum") int name) {
         return GL11C.glGetString(name);
     }
 
@@ -6824,7 +6822,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable ByteBuffer pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") ByteBuffer pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -6860,7 +6858,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable ShortBuffer pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") ShortBuffer pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -6878,7 +6876,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable IntBuffer pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") IntBuffer pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -6896,7 +6894,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable FloatBuffer pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") FloatBuffer pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -6914,7 +6912,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable DoubleBuffer pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") DoubleBuffer pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -6940,7 +6938,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable ByteBuffer pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") ByteBuffer pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -6978,7 +6976,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable ShortBuffer pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") ShortBuffer pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -6997,7 +6995,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable IntBuffer pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") IntBuffer pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -7016,7 +7014,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable FloatBuffer pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") FloatBuffer pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -7035,7 +7033,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") @Nullable DoubleBuffer pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") DoubleBuffer pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -9621,7 +9619,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") short @Nullable [] pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") short [] pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -9630,7 +9628,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") int @Nullable [] pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") int [] pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -9639,7 +9637,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") float @Nullable [] pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") float [] pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -9648,7 +9646,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage1D">Reference Page</a>
      */
-    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") double @Nullable [] pixels) {
+    public static void glTexImage1D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") double [] pixels) {
         GL11C.glTexImage1D(target, level, internalformat, width, border, format, type, pixels);
     }
 
@@ -9657,7 +9655,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") short @Nullable [] pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") short [] pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -9666,7 +9664,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") int @Nullable [] pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") int [] pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -9675,7 +9673,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") float @Nullable [] pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") float [] pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -9684,7 +9682,7 @@ public class GL11 {
      *
      * @see <a href="https://docs.gl/gl4/glTexImage2D">Reference Page</a>
      */
-    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") double @Nullable [] pixels) {
+    public static void glTexImage2D(@NativeType("GLenum") int target, @NativeType("GLint") int level, @NativeType("GLint") int internalformat, @NativeType("GLsizei") int width, @NativeType("GLsizei") int height, @NativeType("GLint") int border, @NativeType("GLenum") int format, @NativeType("GLenum") int type, @NativeType("void const *") double [] pixels) {
         GL11C.glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
     }
 
@@ -9946,4 +9944,21 @@ public class GL11 {
         callPV(coords, __functionAddress);
     }
 
+    // COMPATIBILITY EXTENSION BELOW
+
+    public static void glGetTexLevelParameter(int target, int level, int pname, IntBuffer params) {
+        glGetTexLevelParameteriv(target, level, pname, params);
+    }
+
+    public static void glGetFloat(int pname, FloatBuffer params) {
+        glGetFloatv(pname, params);
+    }
+
+    public static void glTexEnv(int target, int pname, FloatBuffer params) {
+        glTexEnvfv(target, pname, params);
+    }
+
+    public static void glMultMatrix(FloatBuffer m) {
+        glMultMatrixf(m);
+    }
 }
