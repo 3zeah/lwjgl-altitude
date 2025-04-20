@@ -33,6 +33,12 @@ package org.lwjgl.opengl;
 
 public final class GLContext {
 
+    // unused, but altitude is conscientious enough to try to clear these using reflection
+    @SuppressWarnings("unused")
+    private static final ThreadLocal<?> current_capabilities = new ThreadLocal<>();
+    @SuppressWarnings("unused")
+    private static final ThreadLocal<?> thread_cache_entries = new ThreadLocal<>();
+
     private GLContext() {
         // static api
     }
