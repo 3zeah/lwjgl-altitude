@@ -270,9 +270,7 @@ public class Keyboard {
             eventGlfwAction = events.pop();
             eventGlfwMods = events.pop();
             eventChar = events.pop();
-            // lwjgl2 does actually emit KEY_NONE, but i see no reason to, and there is a risk of introducing more
-            // KEY_NONE:s, since the keycodes have to be mapped from glfw
-            if (eventLwjglKey != KEY_NONE && (repeatEventsEnabled || eventGlfwAction != GLFW_REPEAT)) {
+            if (repeatEventsEnabled || eventGlfwAction != GLFW_REPEAT) {
                 return true;
             }
         }
