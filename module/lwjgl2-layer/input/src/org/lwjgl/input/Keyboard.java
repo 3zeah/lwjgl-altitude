@@ -33,13 +33,13 @@ package org.lwjgl.input;
 
 import lwjglalti.input.GlfwToLwjgl2Key;
 import org.lwjgl.opengl.Display;
+import org.lwjglalti.input.DumbRingBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayDeque;
 
 import static org.lwjgl.glfw.GLFW.GLFW_MOD_ALT;
 import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
@@ -237,7 +237,7 @@ public class Keyboard {
     }
 
     private static final int EVENT_SIZE = 4; // key, action, mod, character
-    private static final ArrayDeque<Integer> events = new ArrayDeque<>(50 * EVENT_SIZE);
+    private static final DumbRingBuffer events = new DumbRingBuffer(50 * EVENT_SIZE);
 
     private static boolean repeatEventsEnabled = false;
 
@@ -265,14 +265,11 @@ public class Keyboard {
         // because we retain the previous key event to await the following character event, the previous event may not
         // be in the event queue yet
         addPreviousEvent();
-        if (events.isEmpty()) {
-            return false;
-        }
-        while (!events.isEmpty()) {
-            eventLwjglKey = GlfwToLwjgl2Key.adapt(events.remove());
-            eventGlfwAction = events.remove();
-            eventGlfwMods = events.remove();
-            eventChar = events.remove();
+        while (events.hasNext()) {
+            eventLwjglKey = GlfwToLwjgl2Key.adapt(events.pop());
+            eventGlfwAction = events.pop();
+            eventGlfwMods = events.pop();
+            eventChar = events.pop();
             // lwjgl2 does actually emit KEY_NONE, but i see no reason to, and there is a risk of introducing more
             // KEY_NONE:s, since the keycodes have to be mapped from glfw
             if (eventLwjglKey != KEY_NONE && (repeatEventsEnabled || eventGlfwAction != GLFW_REPEAT)) {
@@ -333,10 +330,10 @@ public class Keyboard {
         // way of handling input, and is not actually desirable: character events are designed for typing, and are not
         // guaranteed to correspond to a key event)
         if (retainedKey != null) {
-            events.addLast(retainedKey);
-            events.addLast(retainedAction);
-            events.addLast(retainedMods);
-            events.addLast(firstCharacterAfterRetainedKey != null ? firstCharacterAfterRetainedKey : CHAR_NONE);
+            events.push(retainedKey);
+            events.push(retainedAction);
+            events.push(retainedMods);
+            events.push(firstCharacterAfterRetainedKey != null ? firstCharacterAfterRetainedKey : CHAR_NONE);
             retainedKey = null;
         }
     }
