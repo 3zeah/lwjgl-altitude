@@ -4,10 +4,13 @@
  */
 package org.lwjgl.openal;
 
-import org.jspecify.annotations.*;
 import org.lwjgl.*;
 import org.lwjgl.system.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
+import java.nio.IntBuffer;
 import java.util.*;
 import java.util.function.*;
 
@@ -44,9 +47,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  */
 public final class AL {
 
-    private static @Nullable ALCapabilities processCaps;
+    private static final Logger LOG = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 
-    private static final ThreadLocal<@Nullable ALCapabilities> capabilitiesTLS = new ThreadLocal<>();
+    private static ALCapabilities processCaps;
+
+    private static final ThreadLocal<ALCapabilities> capabilitiesTLS = new ThreadLocal<>();
 
     private static ICD icd = new ICDStatic();
 
@@ -55,8 +60,30 @@ public final class AL {
     static void init() {
     }
 
-    static void destroy() {
+    public static void destroy() {
+        if (context != NULL) {
+            boolean contextReleased = ALC10.alcMakeContextCurrent(NULL);
+            if (!contextReleased) {
+                LOG.error("Failed to release OpenAL context");
+            }
+            ALC10.alcDestroyContext(context);
+            context = NULL;
+        }
+        if (device != null) {
+            boolean deviceClosed = ALC10.alcCloseDevice(device);
+            if (!deviceClosed) {
+                LOG.error("Failed to close audio device");
+            }
+            device = null;
+        }
+
         setCurrentProcess(null);
+        // ALC#destroy will call this method: prevent infinite recursion with a flag
+        if (!created) {
+            return;
+        }
+        created = false;
+        ALC.destroy();
     }
 
     /**
@@ -67,7 +94,7 @@ public final class AL {
      *
      * @param caps the {@link ALCapabilities} to make current, or null
      */
-    public static void setCurrentProcess(@Nullable ALCapabilities caps) {
+    public static void setCurrentProcess(ALCapabilities caps) {
         processCaps = caps;
         capabilitiesTLS.set(null); // See EXT_thread_local_context, second Q.
         icd.set(caps);
@@ -80,7 +107,7 @@ public final class AL {
      *
      * @param caps the {@link ALCapabilities} to make current, or null
      */
-    public static void setCurrentThread(@Nullable ALCapabilities caps) {
+    public static void setCurrentThread(ALCapabilities caps) {
         capabilitiesTLS.set(caps);
         icd.set(caps);
     }
@@ -99,7 +126,7 @@ public final class AL {
         return checkCapabilities(caps);
     }
 
-    private static ALCapabilities checkCapabilities(@Nullable ALCapabilities caps) {
+    private static ALCapabilities checkCapabilities(ALCapabilities caps) {
         if (caps == null) {
             throw new IllegalStateException(
                     "No ALCapabilities instance set for the current thread or process. Possible solutions:\n" +
@@ -132,7 +159,7 @@ public final class AL {
      *
      * @return the ALCapabilities instance
      */
-    public static ALCapabilities createCapabilities(ALCCapabilities alcCaps, @Nullable IntFunction<PointerBuffer> bufferFactory) {
+    public static ALCapabilities createCapabilities(ALCCapabilities alcCaps, IntFunction<PointerBuffer> bufferFactory) {
         // We'll use alGetProcAddress for both core and extension entry points.
         // To do that, we need to first grab the alGetProcAddress function from
         // the OpenAL native library.
@@ -219,8 +246,8 @@ public final class AL {
 
     /** Function pointer provider. */
     private interface ICD {
-        default void set(@Nullable ALCapabilities caps) {}
-        @Nullable ALCapabilities get();
+        default void set(ALCapabilities caps) {}
+        ALCapabilities get();
     }
 
     /**
@@ -232,11 +259,11 @@ public final class AL {
      */
     private static class ICDStatic implements ICD {
 
-        private static @Nullable ALCapabilities tempCaps;
+        private static ALCapabilities tempCaps;
 
         @SuppressWarnings("AssignmentToStaticFieldFromInstanceMethod")
         @Override
-        public void set(@Nullable ALCapabilities caps) {
+        public void set(ALCapabilities caps) {
             if (tempCaps == null) {
                 tempCaps = caps;
             } else if (caps != null && caps != tempCaps && ThreadLocalUtil.areCapabilitiesDifferent(tempCaps.addresses, caps.addresses)) {
@@ -265,4 +292,73 @@ public final class AL {
 
     }
 
+    // COMPATIBILITY EXTENSION BELOW
+
+    private static boolean created = false;
+    private static ALCdevice device = null;
+    private static long context = NULL;
+
+    // lwjgl2-style: create a single system-wide device with a current context
+    public static void create(String specifier, int contextFrequency, int contextRefresh, boolean contextSynchronized)
+            throws LWJGLException {
+        if (created) {
+            throw new IllegalStateException("OpenAL context was already created");
+        }
+        IntBuffer contextAttributes = packageContextAttributes(contextFrequency, contextRefresh, contextSynchronized);
+        try {
+            createContext(specifier, contextAttributes);
+        } catch (Exception e) {
+            destroy();
+            // ALC#destroy and AL#destroy has an awkward circular dependency: ensure ALC is also destroyed
+            ALC.destroy();
+            throw e;
+        }
+        created = true;
+    }
+
+    private static IntBuffer packageContextAttributes(int frequency, int refresh, boolean sync) {
+        IntBuffer contextAttributes = BufferUtils.createIntBuffer(7);
+
+        contextAttributes.put(ALC10.ALC_FREQUENCY);
+        contextAttributes.put(frequency);
+
+        contextAttributes.put(ALC10.ALC_REFRESH);
+        contextAttributes.put(refresh);
+
+        contextAttributes.put(ALC10.ALC_SYNC);
+        contextAttributes.put(sync ? ALC10.ALC_TRUE : ALC10.ALC_FALSE);
+
+        contextAttributes.put(0); // 0-terminated
+        contextAttributes.flip();
+        return contextAttributes;
+    }
+
+    private static void createContext(CharSequence specifier, IntBuffer attributes) throws LWJGLException {
+        long device = ALC10.alcOpenDevice(specifier);
+        if (device == NULL) {
+            throw new LWJGLException("Could not open audio device");
+        }
+        AL.device = new ALCdevice(device);
+        long context = ALC10.alcCreateContext(device, attributes);
+        if (context == NULL) {
+            ALC10.alcCloseDevice(device);
+            throw new LWJGLException("Could not create OpenAL context");
+        }
+        AL.context = context;
+        boolean contextSuccess = ALC10.alcMakeContextCurrent(context);
+        if (!contextSuccess) {
+            ALC10.alcDestroyContext(context);
+            ALC10.alcCloseDevice(device);
+            throw new LWJGLException("Could not make OpenAL context current");
+        }
+        AL.createCapabilities(ALC.createCapabilities(device));
+    }
+
+    public static ALCdevice getDevice() {
+        return device;
+    }
+
+    public static boolean isCreated() {
+        return created;
+    }
 }
