@@ -34,9 +34,12 @@ package org.lwjgl.input;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.Display;
+import org.lwjglalti.input.DumbRingBuffer;
 
 import java.util.Objects;
 
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.GLFW_RELEASE;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Mouse {
@@ -48,6 +51,19 @@ public class Mouse {
     private static boolean isMouseAiming = false;
 
     private static Cursor nativeCursor = null;
+
+    private static final int EVENT_SIZE = 5; // button, action, x, y, scroll
+    private static final DumbRingBuffer events = new DumbRingBuffer(EVENT_SIZE * 50);
+
+    private static int currentCursorX;
+    private static int currentCursorY;
+
+    // this is the actual current event that consumers see: it is readied by `next`
+    private static int eventGlfwButton;
+    private static int eventGlfwAction;
+    private static int eventGlfwX;
+    private static int eventGlfwY;
+    private static int eventGlfwScroll;
 
     private Mouse() {
         // static api
@@ -62,33 +78,44 @@ public class Mouse {
     }
 
     public static boolean next() {
-        // TODO impl events
-        return false;
+        if (!events.hasNext()) {
+            return false;
+        }
+        eventGlfwButton = events.pop();
+        eventGlfwAction = events.pop();
+        eventGlfwX = events.pop();
+        eventGlfwY = events.pop();
+        eventGlfwScroll = events.pop();
+        return true;
     }
 
     public static int getEventButton() {
-        return 0;
+        // we should not need to adapt the button: lwjgl2 claims to support 16 buttons, and glfw only emits 8
+        return eventGlfwButton;
     }
 
     public static int getEventX() {
-        return 0;
+        return eventGlfwX;
     }
 
     public static int getEventY() {
-        return 0;
+        // glfw cursor position is relative top left, but lwjgl is relative bottom left
+        return Display.displayMode().getHeight() - 1 - eventGlfwY;
     }
 
     public static int getEventDWheel() {
-        return 0;
+        // this magic number comes from testing: lwjgl2 reports 120 per scroll-wheel notch on my machine, but whether
+        // this is robust over platforms does not matter, because altitude only cares about the scale
+        return 120 * eventGlfwScroll;
     }
 
     public static boolean getEventButtonState() {
-        return false;
+        return eventGlfwAction == GLFW_PRESS;
     }
 
     public static void setCursorPosition(int x, int y) {
-        // glfw input position here is relative top left
-        int flippedYPosition = Display.getDesktopDisplayMode().getHeight() - y;
+        // glfw cursor position is relative top left, but lwjgl is relative bottom left
+        int flippedYPosition = Display.displayMode().getHeight() - y;
         // assume window is created
         GLFW.glfwSetCursorPos(Display.window(), x, flippedYPosition);
     }
@@ -152,5 +179,29 @@ public class Mouse {
     public static void setCapturedByDisplay(boolean captured) {
         isCapturedByDisplay = captured;
         updateCursorState();
+    }
+
+    public static void registerGlfwMouseButtonEvent(int button, int action) {
+        addEvent(button, action, 0);
+    }
+
+    public static void registerGlfwCursorPositionEvent(double x, double y) {
+        Mouse.currentCursorX = (int) x;
+        Mouse.currentCursorY = (int) y;
+        addEvent(-1, GLFW_RELEASE, 0);
+    }
+
+    public static void registerGlfwScrollEvent(double amount) {
+        addEvent(-1, GLFW_RELEASE, (int) amount);
+    }
+
+    private static void addEvent(int button, int action, int scroll) {
+        events.push(button);
+        events.push(action);
+        events.push(currentCursorX);
+        events.push(currentCursorY);
+        events.push(scroll);
+        // because the capacity of the buffer is divisible by the event size, we only have to check fullness at the end
+        events.resizeIfFull();
     }
 }

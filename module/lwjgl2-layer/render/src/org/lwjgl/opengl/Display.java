@@ -63,8 +63,11 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowFocusCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowIconifyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
@@ -151,7 +154,7 @@ public class Display {
                 windowMode
         );
         Display.window = WindowOperation.createWindow(title, definition);
-        setWindowCallbacks(window);
+        setWindowCallbacks();
         if (icons != null) {
             WindowOperation.setWindowIcons(window, icons);
         }
@@ -206,7 +209,7 @@ public class Display {
 
     // these are set only once after creating the window, so there are no previous callbacks
     @SuppressWarnings("resource")
-    private static void setWindowCallbacks(long window) {
+    private static void setWindowCallbacks() {
         glfwSetWindowIconifyCallback(window, (__, iconified) ->
                 Display.iconified = iconified
         );
@@ -218,6 +221,15 @@ public class Display {
         );
         glfwSetCharCallback(window, (__, codepoint) ->
                 Keyboard.registerGlfwCharEvent(codepoint)
+        );
+        glfwSetMouseButtonCallback(window, (__, button, action, mods) ->
+                Mouse.registerGlfwMouseButtonEvent(button, action)
+        );
+        glfwSetCursorPosCallback(window, (__, xpos, ypos) ->
+                Mouse.registerGlfwCursorPositionEvent(xpos, ypos)
+        );
+        glfwSetScrollCallback(window, (__, xoffset, yoffset) ->
+                Mouse.registerGlfwScrollEvent(yoffset)
         );
     }
 
@@ -381,5 +393,9 @@ public class Display {
 
     public static boolean windowIsCreated() {
         return window != NULL;
+    }
+
+    public static DisplayMode displayMode() {
+        return displayMode;
     }
 }
