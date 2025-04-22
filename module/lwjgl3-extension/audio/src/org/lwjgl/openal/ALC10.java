@@ -514,11 +514,17 @@ public class ALC10 {
     }
 
     public static boolean alcIsExtensionPresent(ALCdevice device, String extName) {
-        return alcIsExtensionPresent(ALCdevice.getHandleSafe(device), extName);
+        long handle = ALCdevice.getHandleSafe(device);
+        boolean result = alcIsExtensionPresent(handle, extName);
+        Util.checkALCError(handle);
+        return result;
     }
 
     public static String alcGetString(ALCdevice device, int token) {
-        return alcGetString(ALCdevice.getHandleSafe(device), token);
+        long handle = ALCdevice.getHandleSafe(device);
+        String result = alcGetString(handle, token);
+        Util.checkALCError(handle);
+        return result;
     }
 
     public static void alcGetInteger(ALCdevice device, int pname, IntBuffer integerdata) {
