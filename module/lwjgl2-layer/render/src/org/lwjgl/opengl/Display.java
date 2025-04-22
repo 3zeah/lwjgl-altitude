@@ -38,6 +38,7 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWErrorCallbackI;
 import org.lwjgl.glfw.GLFWVidMode;
+import org.lwjgl.input.Keyboard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +61,9 @@ import static org.lwjgl.glfw.GLFW.glfwGetVideoModes;
 import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwMakeContextCurrent;
 import static org.lwjgl.glfw.GLFW.glfwPollEvents;
+import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowFocusCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowIconifyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetWindowPos;
@@ -129,7 +132,7 @@ public class Display {
 
     @SuppressWarnings("unused") // signature must match lwjgl 2 api
     public static void create(PixelFormat pixelFormat) throws LWJGLException {
-        if (window != NULL) {
+        if (windowIsCreated()) {
             return;
         }
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
@@ -166,7 +169,7 @@ public class Display {
             altitudeWantsToRecreateDisplay = false;
             return;
         }
-        if (window != NULL) {
+        if (windowIsCreated()) {
             Callbacks.glfwFreeCallbacks(window);
             glfwDestroyWindow(window);
             window = NULL;
@@ -176,7 +179,7 @@ public class Display {
     }
 
     public static boolean isCreated() {
-        boolean isCreated = window != NULL;
+        boolean isCreated = windowIsCreated();
         // this is a major hack to prevent altitude from forcibly recreating the window on every display-mode change:
         // we know that this method is only used when changing the display mode to check whether to destroy the window
         // before applying the display-mode changes. thus, after a call to this method, we can ignore the next call to
@@ -195,6 +198,10 @@ public class Display {
         return isCreated;
     }
 
+    public static boolean windowIsCreated() {
+        return window != NULL;
+    }
+
     // these are set only once after creating the window, so there are no previous callbacks
     @SuppressWarnings("resource")
     private static void setWindowCallbacks(long window) {
@@ -203,6 +210,12 @@ public class Display {
         );
         glfwSetWindowFocusCallback(window, (__, focused) ->
                 setFocused(focused)
+        );
+        glfwSetKeyCallback(window, (__, key, scancode, action, mods) ->
+                Keyboard.registerGlfwKeyEvent(key, action, mods)
+        );
+        glfwSetCharCallback(window, (__, codepoint) ->
+                Keyboard.registerGlfwCharEvent(codepoint)
         );
     }
 
@@ -220,7 +233,7 @@ public class Display {
             return;
         }
         Display.title = title;
-        if (window != NULL) {
+        if (windowIsCreated()) {
             WindowOperation.setWindowTitle(window, title);
         }
     }
@@ -231,7 +244,7 @@ public class Display {
             return 1;
         }
         Display.icons = icons;
-        if (window != NULL) {
+        if (windowIsCreated()) {
             WindowOperation.setWindowIcons(window, icons);
         }
         return 1; // return value never read
@@ -254,7 +267,7 @@ public class Display {
         Display.windowMode = evaluateWindowMode();
         boolean modeChanged = !Objects.equals(oldDisplayMode, Display.displayMode)
                 || !Objects.equals(oldWindowMode, Display.windowMode);
-        if (window != NULL && modeChanged) {
+        if (windowIsCreated() && modeChanged) {
             WindowDefinition definition = WindowOperation.windowDefinition(
                     INITIAL_PRIMARY_MONITOR,
                     INITIAL_PRIMARY_MONITOR_DISPLAY_MODE,
@@ -292,7 +305,7 @@ public class Display {
             return;
         }
         Display.vsync = vsync;
-        if (window != NULL) {
+        if (windowIsCreated()) {
             WindowOperation.setVsync(vsync);
         }
     }
