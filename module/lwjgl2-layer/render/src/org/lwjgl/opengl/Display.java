@@ -39,6 +39,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWErrorCallbackI;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -154,13 +155,18 @@ public class Display {
         if (icons != null) {
             WindowOperation.setWindowIcons(window, icons);
         }
-        WindowOperation.updateFloating(window, windowMode, focused);
+        triggerUpdatesAfterModeChange();
         glfwMakeContextCurrent(window);
         if (vsync != null) {
             WindowOperation.setVsync(vsync);
         }
         GL.createCapabilities();
         glfwShowWindow(window);
+    }
+
+    private static void triggerUpdatesAfterModeChange() {
+        WindowOperation.updateFloating(window, windowMode, focused);
+        Mouse.setCapturedByDisplay(Objects.equals(windowMode, WindowMode.EXCLUSIVE_FULLSCREEN));
     }
 
     public static void destroy() {
@@ -196,10 +202,6 @@ public class Display {
             altitudeWantsToRecreateDisplay = true;
         }
         return isCreated;
-    }
-
-    public static boolean windowIsCreated() {
-        return window != NULL;
     }
 
     // these are set only once after creating the window, so there are no previous callbacks
@@ -279,6 +281,7 @@ public class Display {
             if (Display.windowMode == WindowMode.WINDOWED && icons != null) {
                 WindowOperation.setWindowIcons(window, icons);
             }
+            triggerUpdatesAfterModeChange();
         }
     }
 
@@ -368,5 +371,15 @@ public class Display {
     private static void setFocused(boolean focused) {
         Display.focused = focused;
         WindowOperation.updateFloating(Display.window, windowMode, focused);
+    }
+
+    // NOT DIRECTLY CALLED BY ALTITUDE
+
+    public static long window() {
+        return window;
+    }
+
+    public static boolean windowIsCreated() {
+        return window != NULL;
     }
 }
