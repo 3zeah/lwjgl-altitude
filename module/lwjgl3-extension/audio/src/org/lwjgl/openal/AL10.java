@@ -5,8 +5,6 @@
  */
 package org.lwjgl.openal;
 
-import org.jspecify.annotations.*;
-
 import java.nio.*;
 
 import org.lwjgl.system.*;
@@ -583,7 +581,7 @@ public class AL10 {
      * @param paramName the parameter to query. One of:<br><table><tr><td>{@link #AL_VENDOR VENDOR}</td><td>{@link #AL_VERSION VERSION}</td><td>{@link #AL_RENDERER RENDERER}</td><td>{@link #AL_EXTENSIONS EXTENSIONS}</td></tr></table>
      */
     @NativeType("ALchar const *")
-    public static @Nullable String alGetString(@NativeType("ALenum") int paramName) {
+    public static String alGetString(@NativeType("ALenum") int paramName) {
         long __result = nalGetString(paramName);
         return memUTF8Safe(__result);
     }
@@ -606,7 +604,7 @@ public class AL10 {
      * @param paramName the parameter to query. One of:<br><table><tr><td>{@link #AL_VENDOR VENDOR}</td><td>{@link #AL_VERSION VERSION}</td><td>{@link #AL_RENDERER RENDERER}</td><td>{@link #AL_EXTENSIONS EXTENSIONS}</td></tr></table>
      */
     @NativeType("ALchar const *")
-    public static @Nullable String alGetStringDirect(@NativeType("ALCcontext *") long context, @NativeType("ALenum") int paramName) {
+    public static String alGetStringDirect(@NativeType("ALCcontext *") long context, @NativeType("ALenum") int paramName) {
         long __result = nalGetStringDirect(context, paramName);
         return memUTF8Safe(__result);
     }
@@ -3871,4 +3869,9 @@ public class AL10 {
         invokePPV(context, bufferName, format, data, data.length << 2, frequency, __functionAddress);
     }
 
+    // COMPATIBILITY EXTENSION BELOW
+
+    public static void alListener(int pname, FloatBuffer value) {
+        alListenerfv(pname, value);
+    }
 }

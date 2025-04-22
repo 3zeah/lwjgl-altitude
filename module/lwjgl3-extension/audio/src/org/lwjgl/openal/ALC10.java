@@ -5,8 +5,6 @@
  */
 package org.lwjgl.openal;
 
-import org.jspecify.annotations.*;
-
 import java.nio.*;
 
 import org.lwjgl.system.*;
@@ -74,7 +72,7 @@ public class ALC10 {
      * @param deviceSpecifier the requested device or device configuration
      */
     @NativeType("ALCdevice *")
-    public static long alcOpenDevice(@NativeType("ALCchar const *") @Nullable ByteBuffer deviceSpecifier) {
+    public static long alcOpenDevice(@NativeType("ALCchar const *") ByteBuffer deviceSpecifier) {
         if (CHECKS) {
             checkNT1Safe(deviceSpecifier);
         }
@@ -90,7 +88,7 @@ public class ALC10 {
      * @param deviceSpecifier the requested device or device configuration
      */
     @NativeType("ALCdevice *")
-    public static long alcOpenDevice(@NativeType("ALCchar const *") @Nullable CharSequence deviceSpecifier) {
+    public static long alcOpenDevice(@NativeType("ALCchar const *") CharSequence deviceSpecifier) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             stack.nUTF8Safe(deviceSpecifier, true);
@@ -138,7 +136,7 @@ public class ALC10 {
      * @param attrList     null or a zero terminated list of integer pairs composed of valid ALC attribute tokens and requested values. One of:<br><table><tr><td>{@link #ALC_FREQUENCY FREQUENCY}</td><td>{@link #ALC_REFRESH REFRESH}</td><td>{@link #ALC_SYNC SYNC}</td><td>{@link ALC11#ALC_MONO_SOURCES MONO_SOURCES}</td><td>{@link ALC11#ALC_STEREO_SOURCES STEREO_SOURCES}</td></tr></table>
      */
     @NativeType("ALCcontext *")
-    public static long alcCreateContext(@NativeType("ALCdevice const *") long deviceHandle, @NativeType("ALCint const *") @Nullable IntBuffer attrList) {
+    public static long alcCreateContext(@NativeType("ALCdevice const *") long deviceHandle, @NativeType("ALCint const *") IntBuffer attrList) {
         if (CHECKS) {
             checkNTSafe(attrList);
         }
@@ -228,7 +226,7 @@ public class ALC10 {
 
     /** Queries for, and obtains a handle to, the current context for the application. If there is no current context, {@code NULL} is returned. */
     @NativeType("ALCcontext *")
-    public static long alcGetCurrentContext() {
+    private static long alcGetCurrentContext_old() {
         long __functionAddress = ALC.getICD().alcGetCurrentContext;
         return invokeP(__functionAddress);
     }
@@ -428,7 +426,7 @@ public class ALC10 {
      * @param token        the information to query. One of:<br><table><tr><td>{@link #ALC_DEFAULT_DEVICE_SPECIFIER DEFAULT_DEVICE_SPECIFIER}</td><td>{@link #ALC_DEVICE_SPECIFIER DEVICE_SPECIFIER}</td><td>{@link #ALC_EXTENSIONS EXTENSIONS}</td></tr><tr><td>{@link ALC11#ALC_CAPTURE_DEFAULT_DEVICE_SPECIFIER CAPTURE_DEFAULT_DEVICE_SPECIFIER}</td><td>{@link ALC11#ALC_CAPTURE_DEVICE_SPECIFIER CAPTURE_DEVICE_SPECIFIER}</td></tr></table>
      */
     @NativeType("ALCchar const *")
-    public static @Nullable String alcGetString(@NativeType("ALCdevice *") long deviceHandle, @NativeType("ALCenum") int token) {
+    public static String alcGetString(@NativeType("ALCdevice *") long deviceHandle, @NativeType("ALCenum") int token) {
         long __result = nalcGetString(deviceHandle, token);
         return memUTF8Safe(__result);
     }
@@ -477,7 +475,7 @@ public class ALC10 {
 
     /** Array version of: {@link #alcCreateContext CreateContext} */
     @NativeType("ALCcontext *")
-    public static long alcCreateContext(@NativeType("ALCdevice const *") long deviceHandle, @NativeType("ALCint const *") int @Nullable [] attrList) {
+    public static long alcCreateContext(@NativeType("ALCdevice const *") long deviceHandle, @NativeType("ALCint const *") int [] attrList) {
         long __functionAddress = ALC.getICD().alcCreateContext;
         if (CHECKS) {
             check(deviceHandle);
@@ -493,4 +491,46 @@ public class ALC10 {
         invokePPV(deviceHandle, token, dest.length, dest, __functionAddress);
     }
 
+    // COMPATIBILITY EXTENSION BELOW
+
+    public static ALCdevice alcOpenDevice(String devicename) {
+        return ALCdevice.createSafe(alcOpenDevice((CharSequence) devicename));
+    }
+
+    public static boolean alcCloseDevice(ALCdevice device) {
+        return alcCloseDevice(ALCdevice.getHandleSafe(device));
+    }
+
+    public static void alcDestroyContext(ALCcontext context) {
+        alcDestroyContext(ALCcontext.getHandleSafe(context));
+    }
+
+    public static ALCdevice alcGetContextsDevice(ALCcontext context) {
+        return ALCdevice.createSafe(alcGetContextsDevice(ALCcontext.getHandleSafe(context)));
+    }
+
+    public static ALCcontext alcGetCurrentContext() {
+        return ALCcontext.createSafe(alcGetCurrentContext_old());
+    }
+
+    public static boolean alcIsExtensionPresent(ALCdevice device, String extName) {
+        return alcIsExtensionPresent(ALCdevice.getHandleSafe(device), extName);
+    }
+
+    public static String alcGetString(ALCdevice device, int token) {
+        return alcGetString(ALCdevice.getHandleSafe(device), token);
+    }
+
+    public static void alcGetInteger(ALCdevice device, int pname, IntBuffer integerdata) {
+        alcGetIntegerv(ALCdevice.getHandleSafe(device), pname, integerdata);
+    }
+
+    public static ALCcontext alcCreateContext(ALCdevice device, IntBuffer attrList) {
+        return ALCcontext.createSafe(alcCreateContext(ALCdevice.getHandleSafe(device), attrList));
+    }
+
+    public static int alcMakeContextCurrent(ALCcontext context) {
+        boolean success = alcMakeContextCurrent(ALCcontext.getHandleSafe(context));
+        return success ? ALC_TRUE : ALC_FALSE;
+    }
 }

@@ -5,8 +5,6 @@
  */
 package org.lwjgl.openal;
 
-import org.jspecify.annotations.*;
-
 import java.nio.*;
 
 import org.lwjgl.system.*;
@@ -61,7 +59,7 @@ public class ALC11 extends ALC10 {
      * @param samples    the number of sample frames to buffer in the AL
      */
     @NativeType("ALCdevice *")
-    public static long alcCaptureOpenDevice(@NativeType("ALCchar const *") @Nullable ByteBuffer deviceName, @NativeType("ALCuint") int frequency, @NativeType("ALCenum") int format, @NativeType("ALCsizei") int samples) {
+    public static long alcCaptureOpenDevice(@NativeType("ALCchar const *") ByteBuffer deviceName, @NativeType("ALCuint") int frequency, @NativeType("ALCenum") int format, @NativeType("ALCsizei") int samples) {
         if (CHECKS) {
             checkNT1Safe(deviceName);
         }
@@ -80,7 +78,7 @@ public class ALC11 extends ALC10 {
      * @param samples    the number of sample frames to buffer in the AL
      */
     @NativeType("ALCdevice *")
-    public static long alcCaptureOpenDevice(@NativeType("ALCchar const *") @Nullable CharSequence deviceName, @NativeType("ALCuint") int frequency, @NativeType("ALCenum") int format, @NativeType("ALCsizei") int samples) {
+    public static long alcCaptureOpenDevice(@NativeType("ALCchar const *") CharSequence deviceName, @NativeType("ALCuint") int frequency, @NativeType("ALCenum") int format, @NativeType("ALCsizei") int samples) {
         MemoryStack stack = stackGet(); int stackPointer = stack.getPointer();
         try {
             stack.nUTF8Safe(deviceName, true);
@@ -250,4 +248,25 @@ public class ALC11 extends ALC10 {
         invokePPV(device, buffer, samples, __functionAddress);
     }
 
+    // COMPATIBILITY EXTENSION BELOW
+
+    public static ALCdevice alcCaptureOpenDevice(String devicename, int frequency, int format, int buffersize) {
+        return ALCdevice.createSafe(alcCaptureOpenDevice((CharSequence) devicename, frequency, format, buffersize));
+    }
+
+    public static boolean alcCaptureCloseDevice(ALCdevice device) {
+        return alcCaptureCloseDevice(ALCdevice.getHandleSafe(device));
+    }
+
+    public static void alcCaptureStart(ALCdevice device) {
+        alcCaptureStart(ALCdevice.getHandleSafe(device));
+    }
+
+    public static void alcCaptureStop(ALCdevice device) {
+        alcCaptureStop(ALCdevice.getHandleSafe(device));
+    }
+
+    public static void alcCaptureSamples(ALCdevice device, ByteBuffer buffer, int samples) {
+        alcCaptureSamples(ALCdevice.getHandleSafe(device), buffer, samples);
+    }
 }
