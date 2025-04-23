@@ -165,6 +165,7 @@ public class Display {
         }
         GL.createCapabilities();
         glfwShowWindow(window);
+        focused = true;
     }
 
     private static void triggerUpdatesAfterModeChange() {
