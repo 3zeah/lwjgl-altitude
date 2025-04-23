@@ -31,9 +31,9 @@
  */
 package org.lwjgl.input;
 
+import lwjglalti.input.DumbRingBuffer;
 import lwjglalti.input.GlfwToLwjgl2Key;
 import org.lwjgl.opengl.Display;
-import org.lwjglalti.input.DumbRingBuffer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

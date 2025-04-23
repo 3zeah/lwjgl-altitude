@@ -31,10 +31,10 @@
  */
 package org.lwjgl.input;
 
+import lwjglalti.input.DumbRingBuffer;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.Display;
-import org.lwjglalti.input.DumbRingBuffer;
 
 import java.util.Objects;
 

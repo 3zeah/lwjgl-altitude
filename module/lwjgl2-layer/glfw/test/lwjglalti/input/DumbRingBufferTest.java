@@ -1,4 +1,4 @@
-package org.lwjglalti.input;
+package lwjglalti.input;
 
 import org.junit.jupiter.api.Test;
 

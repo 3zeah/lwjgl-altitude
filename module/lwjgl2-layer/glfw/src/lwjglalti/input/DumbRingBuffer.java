@@ -1,4 +1,4 @@
-package org.lwjglalti.input;
+package lwjglalti.input;
 
 /**
  * Ring buffer incapable of resizing itself if not prompted, and that cannot handle being full
