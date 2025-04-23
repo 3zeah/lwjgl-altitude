@@ -31,6 +31,7 @@
  */
 package org.lwjgl.opengl;
 
+import lwjglalti.render.Properties;
 import lwjglalti.render.WindowOperation;
 import lwjglalti.render.WindowOperation.WindowDefinition;
 import org.lwjgl.LWJGLException;
@@ -300,12 +301,22 @@ public class Display {
 
     private static WindowMode evaluateWindowMode() {
         DisplayMode monitor = getDesktopDisplayMode();
+        final WindowMode result;
         if (exclusiveFullscreenIsDesired && displayMode.supportsFullscreen()) {
-            return WindowMode.EXCLUSIVE_FULLSCREEN;
+            result = WindowMode.EXCLUSIVE_FULLSCREEN;
         } else if (Display.displayMode.sameSizeAs(monitor)) {
-            return WindowMode.WINDOWED_FULLSCREEN;
+            result = WindowMode.WINDOWED_FULLSCREEN;
         } else {
-            return WindowMode.WINDOWED;
+            result = WindowMode.WINDOWED;
+        }
+        // in altitude, toggling between windowed and exclusive fullscreen may be done either by a keybind or using the
+        // in-game settings, whereas the windowed fullscreen has to be enabled via console command or text-editing the
+        // settings. since windowed fullscreen is usually more desirable, nowadays, we support swapping the behavior of
+        // the exclusive and windowed fullscreen modes
+        if (Properties.preferWindowedFullscreen()) {
+            return swapExclusiveAndWindowedFullscreen(result);
+        } else {
+            return result;
         }
     }
 
@@ -336,7 +347,20 @@ public class Display {
     }
 
     public static boolean isFullscreen() {
-        return windowMode == WindowMode.EXCLUSIVE_FULLSCREEN;
+        // when this property is true, windowed fullscreen and exclusive fullscreen modes are swapped internally, and
+        // thus need to be swapped again when communicated externally
+        WindowMode currentMode = Properties.preferWindowedFullscreen()
+                ? swapExclusiveAndWindowedFullscreen(windowMode)
+                : windowMode;
+        return currentMode == WindowMode.EXCLUSIVE_FULLSCREEN;
+    }
+
+    private static WindowMode swapExclusiveAndWindowedFullscreen(WindowMode mode) {
+        return switch (mode) {
+            case WINDOWED_FULLSCREEN -> WindowMode.EXCLUSIVE_FULLSCREEN;
+            case EXCLUSIVE_FULLSCREEN -> WindowMode.WINDOWED_FULLSCREEN;
+            default -> mode;
+        };
     }
 
     // CAPABILITIES
