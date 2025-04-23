@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-Path: lwjgl3/lwjgl.jar lwjgl3/lwjgl-glfw.jar lwjgl3/lwjgl-openal.j
+ ar lwjgl3/lwjgl-opengl.jar lwjgl3/lwjgl-jemalloc.jar
+
