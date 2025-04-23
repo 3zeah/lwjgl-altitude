@@ -1,6 +1,6 @@
-This project comprises almost exclusively work derived from
-LWJGL, 2.9.3 and 3.3.6. Both LWJGL 2.9.3 and 3.3.6 are licensed separately: see the header of each source file, if derived, or the
-included licenses of each distributed jar.
+Packages in org.lwjgl are derived from LWJGL 2.9.3 under the license in /lwjgl2/.
+
+The remainder is licensed by the following license, general to this project.  
 
 This is free and unencumbered software released into the public domain.
 
