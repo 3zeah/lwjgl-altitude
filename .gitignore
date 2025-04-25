@@ -25,6 +25,9 @@
 hs_err_pid*
 replay_pid*
 
+# maven output
+**/target/
+
 ### IntelliJ IDEA ###
 out/
 !**/src/main/**/out/
