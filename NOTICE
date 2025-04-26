@@ -1,0 +1,5 @@
+This project is largely an adapter implementing various LWJGL 2 API:s. Additionally, this project bundles a copy of the controller support from LWJGL 2. The LWJGL Project (https://legacy.lwjgl.org/) are both the initial designers of these API:s, and the initial developers of the copied code.
+Copyright (c) 2002-2008 Lightweight Java Game Library Project. All rights reserved.
+
+This project bundles various Java bindings that are copied and retained from LWJGL 3 with minor extensions. Additionally, this project bundles native libraries for LWJGL3. The initial developer of both is the Lightweight Java Game Library (https://www.lwjgl.org/).
+Copyright (c) 2012-present Lightweight Java Game Library All rights reserved.

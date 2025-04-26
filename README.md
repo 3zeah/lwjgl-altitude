@@ -32,7 +32,7 @@ After installation, _\<altitude game path\>/app/lib/lwjgl-altitude_ will contain
 
 ## Build
 
-`mvn package` packages the distribution artifact, _lwjgl-altitude-\<version\>.zip_, to _/distribution/target_
+`mvn package` packages a release, _lwjgl-altitude-\<version\>.zip_, to _/core/target_
 
 ## Issues
 
@@ -48,13 +48,13 @@ No plans to support. But probably could be supported.
 
 ## Details
 
-The primary artifact, _lwjgl-altitude.jar_, is a compatibility layer between LWJGL2 and LWJGL3. It depends on the other artifact of the project _lwjgl-altitude-lwjgl3-extension.jar_, which extends the set of LWJGL3 classes that also existed in LWJGL2 but have had breaking API changes to Altitude. Finally, the entire project depends on LWJGL3, which naturally must be later on the classpath than the LWJGL3 extension.
+The primary artifact, _lwjgl-altitude.jar_, is a compatibility layer between LWJGL2 and LWJGL3. It both introduces adapter classes for API:s removed in LWJGL3, and extends extant LWJGL3 classes that had breaking changes from LWJGL2. In either case, only API:s used by Altitude are adapted.
 
-For convenience, packaging the project bundles both jars and LWJGL3, including its natives - with classpaths set internally between them - to produce a drop-in install. Only the primary jar, _lwjgl-altitude.jar_, needs to be linked to Altitude, replacing its link to LWJGL2. Because the application classpath of Altitude is in plain text, it is trivial to edit the classpath and thus enable this project, and just as easily reverted. Presently, in 1.1.6, Altitude stores the classpath of each executable _\<name\>.exe_ in _/app/\<name\>.cfg_. In particular, the classpath of the regular game is defined in _/app/Altitude.cfg_.
+For convenience, releases bundle the project artifact along with the required LWJGL3 jars and LWJGL3 natives, to produce a drop-in install. Thus, to enable this project, only _lwjgl-altitude.jar_ needs to be linked to Altitude, replacing its link to LWJGL2. Because the application classpath of Altitude is in plain text, this is trivial to accomplish, and just as easily reverted. Presently, in 1.1.6, Altitude stores the classpath of each executable _\<name\>.exe_ in _/app/\<name\>.cfg_. In particular, the classpath of the regular game is defined in _/app/Altitude.cfg_.
 
 ### Other dependencies
 
-These require no action to install, but are noted for posterity. The following are dependencies that the project relies on, and require for compilation, but are not distributed here, because they are found within Altitude itself.
+These require no action to install, but are noted for posterity. The following are dependencies on which the project relies, both to run and to compile, but are not redistributed here, because they are found within Altitude itself.
 
-* jinput: The controller support is ripped and retained straight from LWJGL2. This support wraps jinput
+* jinput: The controller support of this project is ripped and retained straight from LWJGL2. This support wraps jinput
 * slf4j/log4j: To simplify debugging, this project logs to the regular Altitude log. Accordingly, this project relies on log4j and its slf4j bindings, which Altitude uses for logging

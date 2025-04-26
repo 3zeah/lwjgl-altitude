@@ -3,20 +3,23 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>lwjgl3-extension-render</artifactId>
-
     <parent>
         <groupId>lwjglalti</groupId>
-        <artifactId>lwjgl-altitude</artifactId>
+        <artifactId>lwjgl-altitude-parent</artifactId>
         <version>0.9</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
+
+    <artifactId>lwjgl-altitude-system</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>org.lwjgl</groupId>
-            <artifactId>lwjgl-opengl</artifactId>
+            <artifactId>lwjgl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-glfw</artifactId>
         </dependency>
     </dependencies>
 </project>

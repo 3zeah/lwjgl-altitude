@@ -1,6 +1,6 @@
 <assembly xmlns="http://maven.apache.org/ASSEMBLY/2.2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.2.0 https://maven.apache.org/xsd/assembly-2.2.0.xsd">
-    <id>distribution</id>
+    <id>release</id>
     <formats>
         <format>zip</format>
     </formats>
@@ -8,32 +8,19 @@
     <dependencySets>
         <dependencySet>
             <outputDirectory>/lib/</outputDirectory>
-            <useProjectArtifact>false</useProjectArtifact>
-            <outputFileNameMapping>${project.parent.artifactId}.${artifact.extension}</outputFileNameMapping>
-            <useProjectAttachments>true</useProjectAttachments>
-            <unpack>false</unpack>
-            <scope>runtime</scope>
-            <includes>
-                <include>lwjglalti:lwjgl2-layer</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>/lib/</outputDirectory>
-            <useProjectArtifact>false</useProjectArtifact>
-            <outputFileNameMapping>${project.parent.artifactId}-${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
-            <useProjectAttachments>true</useProjectAttachments>
-            <unpack>false</unpack>
-            <scope>runtime</scope>
-            <includes>
-                <include>lwjglalti:lwjgl3-extension</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>/lib/lwjgl3/</outputDirectory>
-            <useProjectArtifact>false</useProjectArtifact>
-            <unpack>false</unpack>
-            <scope>runtime</scope>
             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+            <useProjectAttachments>true</useProjectAttachments>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
+            <includes>
+                <include>lwjglalti:lwjgl-altitude</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>/lib/lwjgl-3/</outputDirectory>
+            <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
+            <unpack>false</unpack>
+            <useProjectArtifact>false</useProjectArtifact>
             <includes>
                 <include>org.lwjgl:lwjgl</include>
                 <include>org.lwjgl:lwjgl-glfw</include>
@@ -45,13 +32,17 @@
     </dependencySets>
     <fileSets>
         <fileSet>
-            <directory>src/resources/native/lwjgl-3.3.6</directory>
-            <outputDirectory>native</outputDirectory>
+            <directory>release/native/lwjgl-3.3.6</directory>
+            <outputDirectory>/native/</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>release/third-party-licenses</directory>
+            <outputDirectory>lib/lwjgl-altitude/third-party-licenses/</outputDirectory>
         </fileSet>
     </fileSets>
     <files>
         <file>
-            <source>src/resources/lwjgl-altitude.default.properties</source>
+            <source>release/lwjgl-altitude.properties</source>
             <destName>lib/lwjgl-altitude/lwjgl-altitude.properties</destName>
         </file>
     </files>

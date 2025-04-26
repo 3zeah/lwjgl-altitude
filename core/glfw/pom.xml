@@ -3,25 +3,32 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
-    <artifactId>lwjgl3-extension-audio</artifactId>
-
     <parent>
         <groupId>lwjglalti</groupId>
-        <artifactId>lwjgl-altitude</artifactId>
+        <artifactId>lwjgl-altitude-parent</artifactId>
         <version>0.9</version>
-        <relativePath>../../../pom.xml</relativePath>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
+
+    <artifactId>lwjgl-altitude-glfw</artifactId>
 
     <dependencies>
         <dependency>
             <groupId>lwjglalti</groupId>
-            <artifactId>lwjgl2-layer-util</artifactId>
+            <artifactId>lwjgl-altitude-system</artifactId>
             <version>0.9</version>
         </dependency>
         <dependency>
             <groupId>org.lwjgl</groupId>
-            <artifactId>lwjgl-openal</artifactId>
+            <artifactId>lwjgl-glfw</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.java.jinput</groupId>
+            <artifactId>jinput</artifactId>
         </dependency>
     </dependencies>
 </project>
