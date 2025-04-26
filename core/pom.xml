@@ -35,6 +35,9 @@
                                 <descriptor>release/jar-assembly.xml</descriptor>
                             </descriptors>
                             <archive>
+                                <manifest>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
                                 <manifestEntries>
                                     <Class-Path>lwjgl-altitude/ lwjgl-3/lwjgl.jar lwjgl-3/lwjgl-glfw.jar lwjgl-3/lwjgl-openal.jar lwjgl-3/lwjgl-opengl.jar lwjgl-3/lwjgl-jemalloc.jar</Class-Path>
                                 </manifestEntries>
