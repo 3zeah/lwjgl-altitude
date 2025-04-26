@@ -5,7 +5,7 @@ Compatibility layer between LWJGL2 (legacy) and LWJGL3, tuned for the video game
 ## Quickstart
 
 1. Ensure compatible version of Altitude, by verifying that the game directory contains the _app_ subdirectory. At the time of writing, the current version of Altitude was 1.1.6
-2. Download _lwjgl-altitude-\<version\>.zip_ from the latest release, or it yourself according to the [Build section](#build)
+2. Download _lwjgl-altitude-\<version\>.zip_ from the latest release, or build it yourself according to the [Build section](#build)
 3. Extract the contents of the distribution artifact (_lwjgl-altitude-\<version\>.zip_) to _\<altitude game path\>/app_
 4. Modify _\<altitude game path\>/app/Altitude.cfg_
    * Replace the following lines
@@ -48,7 +48,7 @@ No plans to support. But probably could be supported.
 
 ## Details
 
-The primary artifact, _lwjgl-altitude.jar_ is a compatibility layer between LWJGL2 and LWJGL3. It depends on the other artifact of the project _lwjgl-altitude-lwjgl3-extension.jar_, which extends the set of LWJGL3 classes that also existed in LWJGL2 but have had breaking API changes to Altitude. Finally, the entire project depends on LWJGL3, which naturally must be later on the classpath than the LWJGL3 extension.
+The primary artifact, _lwjgl-altitude.jar_, is a compatibility layer between LWJGL2 and LWJGL3. It depends on the other artifact of the project _lwjgl-altitude-lwjgl3-extension.jar_, which extends the set of LWJGL3 classes that also existed in LWJGL2 but have had breaking API changes to Altitude. Finally, the entire project depends on LWJGL3, which naturally must be later on the classpath than the LWJGL3 extension.
 
 For convenience, packaging the project bundles both jars and LWJGL3, including its natives - with classpaths set internally between them - to produce a drop-in install. Only the primary jar, _lwjgl-altitude.jar_, needs to be linked to Altitude, replacing its link to LWJGL2. Because the application classpath of Altitude is in plain text, it is trivial to edit the classpath and thus enable this project, and just as easily reverted. Presently, in 1.1.6, Altitude stores the classpath of each executable _\<name\>.exe_ in _/app/\<name\>.cfg_. In particular, the classpath of the regular game is defined in _/app/Altitude.cfg_.
 
