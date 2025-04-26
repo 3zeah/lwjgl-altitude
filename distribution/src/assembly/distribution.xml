@@ -8,6 +8,7 @@
     <dependencySets>
         <dependencySet>
             <outputDirectory>/lib/</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
             <outputFileNameMapping>${project.parent.artifactId}.${artifact.extension}</outputFileNameMapping>
             <useProjectAttachments>true</useProjectAttachments>
             <unpack>false</unpack>
@@ -18,6 +19,7 @@
         </dependencySet>
         <dependencySet>
             <outputDirectory>/lib/</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
             <outputFileNameMapping>${project.parent.artifactId}-${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>
             <useProjectAttachments>true</useProjectAttachments>
             <unpack>false</unpack>
@@ -28,6 +30,7 @@
         </dependencySet>
         <dependencySet>
             <outputDirectory>/lib/lwjgl3/</outputDirectory>
+            <useProjectArtifact>false</useProjectArtifact>
             <unpack>false</unpack>
             <scope>runtime</scope>
             <outputFileNameMapping>${artifact.artifactId}.${artifact.extension}</outputFileNameMapping>

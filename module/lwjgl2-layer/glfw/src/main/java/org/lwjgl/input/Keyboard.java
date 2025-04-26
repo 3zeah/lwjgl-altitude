@@ -195,15 +195,11 @@ public class Keyboard {
     public static final int KEY_LMETA           = 0xDB; /* Left Windows/Option key */
     /**
      * The left windows key, mapped to KEY_LMETA
-     *
-     * @deprecated Use KEY_LMETA instead
      */
     public static final int KEY_LWIN            = KEY_LMETA; /* Left Windows key */
     public static final int KEY_RMETA            = 0xDC; /* Right Windows/Option key */
     /**
      * The right windows key, mapped to KEY_RMETA
-     *
-     * @deprecated Use KEY_RMETA instead
      */
     public static final int KEY_RWIN            = KEY_RMETA; /* Right Windows key */
     public static final int KEY_APPS            = 0xDD; /* AppMenu key */
