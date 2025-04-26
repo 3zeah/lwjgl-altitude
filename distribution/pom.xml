@@ -10,7 +10,7 @@
     <parent>
         <groupId>lwjglalti</groupId>
         <artifactId>lwjgl-altitude</artifactId>
-        <version>0.1</version>
+        <version>0.9</version>
     </parent>
 
     <build>
@@ -40,12 +40,12 @@
         <dependency>
             <groupId>lwjglalti</groupId>
             <artifactId>lwjgl2-layer</artifactId>
-            <version>0.1</version>
+            <version>0.9</version>
         </dependency>
         <dependency>
             <groupId>lwjglalti</groupId>
             <artifactId>lwjgl3-extension</artifactId>
-            <version>0.1</version>
+            <version>0.9</version>
         </dependency>
     </dependencies>
 </project>

@@ -9,7 +9,7 @@
     <parent>
         <groupId>lwjglalti</groupId>
         <artifactId>lwjgl-altitude</artifactId>
-        <version>0.1</version>
+        <version>0.9</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -44,12 +44,12 @@
         <dependency>
             <groupId>lwjglalti</groupId>
             <artifactId>lwjgl2-layer-glfw</artifactId>
-            <version>0.1</version>
+            <version>0.9</version>
         </dependency>
         <dependency>
             <groupId>lwjglalti</groupId>
             <artifactId>lwjgl2-layer-util</artifactId>
-            <version>0.1</version>
+            <version>0.9</version>
         </dependency>
     </dependencies>
 </project>
