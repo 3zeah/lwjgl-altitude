@@ -301,22 +301,23 @@ public class Display {
 
     private static WindowMode evaluateWindowMode() {
         DisplayMode monitor = getDesktopDisplayMode();
-        final WindowMode result;
-        if (exclusiveFullscreenIsDesired && displayMode.supportsFullscreen()) {
-            result = WindowMode.EXCLUSIVE_FULLSCREEN;
-        } else if (Display.displayMode.sameSizeAs(monitor)) {
-            result = WindowMode.WINDOWED_FULLSCREEN;
-        } else {
-            result = WindowMode.WINDOWED;
-        }
-        // in altitude, toggling between windowed and exclusive fullscreen may be done either by a keybind or using the
-        // in-game settings, whereas the windowed fullscreen has to be enabled via console command or text-editing the
-        // settings. since windowed fullscreen is usually more desirable, nowadays, we support swapping the behavior of
-        // the exclusive and windowed fullscreen modes
-        if (Properties.preferWindowedFullscreen()) {
-            return swapExclusiveAndWindowedFullscreen(result);
+        WindowMode result = evaluateWindowModeIgnoringProperties(monitor);
+        if (Properties.preferWindowedFullscreen()
+                && result == WindowMode.EXCLUSIVE_FULLSCREEN
+                && Display.displayMode.sameSizeAs(monitor)) {
+            return WindowMode.WINDOWED_FULLSCREEN;
         } else {
             return result;
+        }
+    }
+
+    private static WindowMode evaluateWindowModeIgnoringProperties(DisplayMode monitor) {
+        if (exclusiveFullscreenIsDesired && displayMode.supportsFullscreen()) {
+            return WindowMode.EXCLUSIVE_FULLSCREEN;
+        } else if (Display.displayMode.sameSizeAs(monitor)) {
+            return WindowMode.WINDOWED_FULLSCREEN;
+        } else {
+            return WindowMode.WINDOWED;
         }
     }
 
@@ -347,20 +348,10 @@ public class Display {
     }
 
     public static boolean isFullscreen() {
-        // when this property is true, windowed fullscreen and exclusive fullscreen modes are swapped internally, and
-        // thus need to be swapped again when communicated externally
-        WindowMode currentMode = Properties.preferWindowedFullscreen()
-                ? swapExclusiveAndWindowedFullscreen(windowMode)
-                : windowMode;
-        return currentMode == WindowMode.EXCLUSIVE_FULLSCREEN;
-    }
-
-    private static WindowMode swapExclusiveAndWindowedFullscreen(WindowMode mode) {
-        return switch (mode) {
-            case WINDOWED_FULLSCREEN -> WindowMode.EXCLUSIVE_FULLSCREEN;
-            case EXCLUSIVE_FULLSCREEN -> WindowMode.WINDOWED_FULLSCREEN;
-            default -> mode;
-        };
+        // we support overriding or changing the display mode via properties, but that cannot affect how we communicate
+        // with altitude, since the result here must match with what altitude expects from its actual settings
+        WindowMode currentModeAccordingToAltitude = evaluateWindowModeIgnoringProperties(getDesktopDisplayMode());
+        return currentModeAccordingToAltitude == WindowMode.EXCLUSIVE_FULLSCREEN;
     }
 
     // CAPABILITIES

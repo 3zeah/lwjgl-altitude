@@ -26,9 +26,9 @@ Undo the modification of _\<altitude game path\>/app/Altitude.cfg_ in step 4.
 
 After installation, _\<altitude game path\>/app/lib/lwjgl-altitude_ will contain the file _lwjgl-altitude.properties_. This file is the total configuration of the installation.
 
-| Property                     | Allowed values    | Effect                                                                                                                                                                                                                               |
-|------------------------------|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `prefer_windowed_fullscreen` | `true` or `false` | When true, exclusive fullscreen and windowed fullscreen are swapped. Normally, windowed fullscreen has to be toggled with a console command (`testWindowedFullscreen`), so this makes windowed fullscreen more convenient to access. |
+| Property                     | Allowed values    | Effect                                                                                                                                                                                                                      |
+|------------------------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `prefer_windowed_fullscreen` | `true` or `false` | When true, the game is in windowed fullscreen whenever it is in fullscreen and the resolution matches the monitor. Normally, windowed fullscreen must be activated with a console command (`/testWindowedFullscreen true`). |
 
 ## Build
 
