@@ -2,6 +2,14 @@
 
 Compatibility layer between LWJGL2 (legacy) and LWJGL3, tuned for the video game [Altitude](https://altitudegame.com/) (also legacy, technologically). In particular, at least on modern drivers, the display management of vanilla Altitude is horrible. Hopefully GLFW (used by LWJGL3) is better...
 
+## Features
+
+* Functional and accessible windowed fullscreen
+* Alt-tabbing without second-long blackouts
+* Toggling fullscreen without second-long blackouts
+* Clicking parts of the screen do not randomly minimize the game
+* Crosshair constrained to window while mouse-aiming
+
 ## Quickstart
 
 1. Ensure compatible version of Altitude, by verifying that the game directory contains the _app_ subdirectory. At the time of writing, the current version of Altitude was 1.1.6 (if _app_ does not exist, your build is old)
