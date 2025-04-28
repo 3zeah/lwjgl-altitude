@@ -4,9 +4,9 @@ Compatibility layer between LWJGL2 (legacy) and LWJGL3, tuned for the video game
 
 ## Quickstart
 
-1. Ensure compatible version of Altitude, by verifying that the game directory contains the _app_ subdirectory. At the time of writing, the current version of Altitude was 1.1.6
+1. Ensure compatible version of Altitude, by verifying that the game directory contains the _app_ subdirectory. At the time of writing, the current version of Altitude was 1.1.6 (if _app_ does not exist, your build is old)
 2. Download _lwjgl-altitude-\<version\>.zip_ from the latest release, or build it yourself according to the [Build section](#build)
-3. Extract the contents of the distribution artifact (_lwjgl-altitude-\<version\>.zip_) to _\<altitude game path\>/app_
+3. Extract the contents _lwjgl-altitude-\<version\>.zip_ to _\<altitude game path\>/app_
 4. Modify _\<altitude game path\>/app/Altitude.cfg_
    * Replace the following lines
      * `app.classpath=$APPDIR\lib\lwjgl-2.9.3.jar`
