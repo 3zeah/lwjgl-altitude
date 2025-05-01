@@ -12,10 +12,13 @@ Compatibility layer between LWJGL2 (legacy) and LWJGL3, tuned for the video game
 
 ## Quickstart
 
-1. Ensure compatible version of Altitude, by verifying that the game directory contains the _app_ subdirectory. At the time of writing, the current version of Altitude was 1.1.6 (if _app_ does not exist, your build is old)
+1. Locate the _app_ directory somewhere in the game directory. If _app_ does not exist, your build is old, and incompatible with this project. (At the time of writing, the current version of Altitude was 1.1.6)
+   * Windows: _Altitude/app/_
+   * macOS: _Altitude.app/Contents/app/_
+   * Linux: _altitude/lib/app/_
 2. Download _lwjgl-altitude-\<version\>.zip_ from the latest release, or build it yourself according to the [Build section](#build)
-3. Extract the contents _lwjgl-altitude-\<version\>.zip_ to _\<altitude game path\>/app_
-4. Modify _\<altitude game path\>/app/Altitude.cfg_
+3. Extract the contents of _lwjgl-altitude-\<version\>.zip_ to the _app_ directory
+4. Modify _Altitude.cfg_ in the _app_ directory
    * Replace the following lines
      * `app.classpath=$APPDIR\lib\lwjgl-2.9.3.jar`
      * `app.classpath=$APPDIR\lib\lwjgl-platform-2.9.3-natives-linux.jar`
@@ -28,11 +31,11 @@ Compatibility layer between LWJGL2 (legacy) and LWJGL3, tuned for the video game
 
 ### Disable
 
-Undo the modification of _\<altitude game path\>/app/Altitude.cfg_ in step 4.
+Undo the modification of _app/Altitude.cfg_ from step 4.
 
 ## Configuration
 
-After installation, _\<altitude game path\>/app/lib/lwjgl-altitude_ will contain the file _lwjgl-altitude.properties_. This file is the total configuration of the installation.
+After installation, _app/lib/lwjgl-altitude_ will contain the file _lwjgl-altitude.properties_. This file is the total configuration of the installation.
 
 | Property                     | Allowed values    | Effect                                                                                                                                                                                                                      |
 |------------------------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
