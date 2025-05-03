@@ -18,6 +18,76 @@
         <module>system</module>
     </modules>
 
+    <properties>
+        <altitudeClient.appDir/>
+        <altitudeClient.exePath/>
+    </properties>
+
+    <profiles>
+        <profile>
+            <id>run-altitude</id>
+            <activation>
+                <property>
+                    <name>altitudeClient.exePath</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo level="info"
+                                              message="running altitude client: ${altitudeClient.exePath}"/>
+                                        <exec executable="${altitudeClient.exePath}"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>deploy-to-altitude</id>
+            <activation>
+                <property>
+                    <name>altitudeClient.appDir</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>pre-integration-test</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo level="info"
+                                              message="deploying to altitude-client app dir: ${altitudeClient.appDir}"/>
+                                        <unzip
+                                                src="${project.build.directory}/${project.artifactId}-${project.version}.zip"
+                                                dest="${altitudeClient.appDir}"/>
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>

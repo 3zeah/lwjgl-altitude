@@ -62,6 +62,13 @@ The primary artifact, _lwjgl-altitude.jar_, is a compatibility layer between LWJ
 
 For convenience, releases bundle the project artifact along with the required LWJGL3 jars and LWJGL3 natives, to produce a drop-in install. Thus, to enable this project, only _lwjgl-altitude.jar_ needs to be linked to Altitude, replacing its link to LWJGL2. Because the application classpath of Altitude is in plain text, this is trivial to accomplish, and just as easily reverted. Presently, in 1.1.6, Altitude stores the classpath of each executable _\<name\>.exe_ in _/app/\<name\>.cfg_. In particular, the classpath of the regular game is defined in _/app/Altitude.cfg_.
 
+### Development
+
+* If property `altitudeClient.appDir` is set, maven phase `pre-integration-test` will extract the packaged release installation to that directory, simulating a fresh installation
+* If property `altitudeClient.exeDir` is set, maven phase `integration-test` will run that executable
+
+For development, then, eg, use `mvn verify -DaltitudeClient.appDir=C:/Games/Altitude_Test/app -DaltitudeClient.exePath=D:/Games/Altitude_Test/Altitude.exe` along with a sandbox copy of the Altitude client to test changes quickly. Maven even mirrors the Altitude log.
+
 ### Other dependencies
 
 These require no action to install, but are noted for posterity. The following are dependencies on which the project relies, both to run and to compile, but are not redistributed here, because they are found within Altitude itself.
