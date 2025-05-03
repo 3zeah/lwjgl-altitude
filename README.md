@@ -43,7 +43,7 @@ After installation, _app/lib/lwjgl-altitude_ will contain the file _lwjgl-altitu
 
 ## Build
 
-`mvn package` packages a release, _lwjgl-altitude-\<version\>.zip_, to _/core/target_
+`mvn package` packages a release installation, _lwjgl-altitude-\<version\>.zip_, and a naked release jar, _lwjgl-altitude.jar_, to _core/target_. The installation bundles everything required to install the mod, whereas the jar suffices when only upgrading first-party code.
 
 ## Issues
 

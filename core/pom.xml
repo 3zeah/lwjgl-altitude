@@ -130,6 +130,28 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <!-- this is the release jar but with the same version-independent name that it has in an
+                         installation, making minimal release upgrades easier to distribute (forcing users to re-install
+                         completely would lead to property-file overwrites) -->
+                    <execution>
+                        <id>upgradable-jar-release</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy
+                                        file="${project.build.directory}/${project.artifactId}-${project.version}-release.jar"
+                                        tofile="${project.build.directory}/${project.artifactId}.jar"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
