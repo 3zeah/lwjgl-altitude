@@ -60,7 +60,7 @@ No plans to support. But probably could be supported.
 
 The primary artifact, _lwjgl-altitude.jar_, is a compatibility layer between LWJGL2 and LWJGL3. It both introduces adapter classes for API:s removed in LWJGL3, and extends extant LWJGL3 classes that had breaking changes from LWJGL2. In either case, only API:s used by Altitude are adapted.
 
-For convenience, releases bundle the project artifact along with the required LWJGL3 jars and LWJGL3 natives, to produce a drop-in install. Thus, to enable this project, only _lwjgl-altitude.jar_ needs to be linked to Altitude, replacing its link to LWJGL2. Because the application classpath of Altitude is in plain text, this is trivial to accomplish, and just as easily reverted. Presently, in 1.1.6, Altitude stores the classpath of each executable _\<name\>.exe_ in _/app/\<name\>.cfg_. In particular, the classpath of the regular game is defined in _/app/Altitude.cfg_.
+For convenience, releases bundle the project artifact along with the required LWJGL3 jars and LWJGL3 natives, to produce a drop-in install. Thus, to enable this project, only _lwjgl-altitude.jar_ needs to be linked to Altitude, replacing its link to LWJGL2. Because the application classpath of Altitude is in plain text, this is trivial to accomplish, and just as easily reverted. Presently, in 1.1.6, Altitude stores the classpath of each executable _\<name\>.exe_ in _app/\<name\>.cfg_. In particular, the classpath of the regular game is defined in _app/Altitude.cfg_.
 
 ### Development
 
