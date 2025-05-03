@@ -108,7 +108,8 @@ public class Display {
     private static boolean altitudeWantsToRecreateDisplay = false;
 
     // FIELD GROUP: monitor state
-    private static Float gamma = null;
+    private static Float desiredGamma = null;
+    private static Float actualGamma = null;
 
     // FIELD GROUP: window state that may be set before window is created, and thus needs to be retained here
     private static DisplayMode displayMode = null;
@@ -351,24 +352,35 @@ public class Display {
     @SuppressWarnings({"unused", "RedundantThrows"}) // lwjgl2 api signature retained for posterity
     public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws LWJGLException {
         // altitude will always pass brightness = 0 and contrast = 1, which in lwjgl2 is a no-op: consider only gamma
-        if (Objects.equals(gamma, Display.gamma)) {
+        if (Objects.equals(gamma, Display.desiredGamma)) {
             return;
         }
-        Display.gamma = gamma;
+        Display.desiredGamma = gamma;
         updateGamma();
     }
 
     private static void updateGamma() {
         // if `INITIAL_GAMMA_RAMP` is null, getting the gamma ramp failed, and the gamma system therefore is unsupported
-        if (INITIAL_GAMMA_RAMP == null || Display.gamma == null) {
+        // if `desiredGamma` is null, no gamma preference has been sent by the client at all
+        if (INITIAL_GAMMA_RAMP == null || Display.desiredGamma == null) {
             return;
         }
         // this condition is whether altitude considers the current mode to be exclusive fullscreen. we could support
         // gamma correction always, but because altitude will not forward updated gamma values unless `isFullscreen`,
         // we have to match altitude
-        if (Display.focused && isFullscreen()) {
-            MonitorOperation
-                    .setGammaRampFromLwjgl2Gamma(INITIAL_PRIMARY_MONITOR, INITIAL_GAMMA_RAMP.size(), Display.gamma);
+        Float newGamma = Display.focused && isFullscreen()
+                ? Display.desiredGamma
+                : null;
+        if (Objects.equals(Display.actualGamma, newGamma)) {
+            return;
+        }
+        Display.actualGamma = newGamma;
+        if (Display.actualGamma != null) {
+            MonitorOperation.setGammaRampFromLwjgl2Gamma(
+                    INITIAL_PRIMARY_MONITOR,
+                    INITIAL_GAMMA_RAMP.size(),
+                    Display.actualGamma
+            );
         } else {
             try (GLFWGammaRamp ramp = INITIAL_GAMMA_RAMP.allocateAsGlfwRamp()) {
                 glfwSetGammaRamp(INITIAL_PRIMARY_MONITOR, ramp);
