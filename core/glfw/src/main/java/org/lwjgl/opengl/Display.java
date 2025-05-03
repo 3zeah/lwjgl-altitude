@@ -31,6 +31,8 @@
  */
 package org.lwjgl.opengl;
 
+import lwjglalti.render.GammaRamp;
+import lwjglalti.render.MonitorOperation;
 import lwjglalti.render.Properties;
 import lwjglalti.render.WindowOperation;
 import lwjglalti.render.WindowOperation.WindowDefinition;
@@ -38,6 +40,7 @@ import org.lwjgl.LWJGLException;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFWErrorCallbackI;
+import org.lwjgl.glfw.GLFWGammaRamp;
 import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -57,6 +60,7 @@ import static org.lwjgl.glfw.GLFW.GLFW_RESIZABLE;
 import static org.lwjgl.glfw.GLFW.GLFW_STENCIL_BITS;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
+import static org.lwjgl.glfw.GLFW.glfwGetGammaRamp;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoModes;
@@ -66,6 +70,7 @@ import static org.lwjgl.glfw.GLFW.glfwPollEvents;
 import static org.lwjgl.glfw.GLFW.glfwSetCharCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetCursorPosCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
+import static org.lwjgl.glfw.GLFW.glfwSetGammaRamp;
 import static org.lwjgl.glfw.GLFW.glfwSetKeyCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetMouseButtonCallback;
 import static org.lwjgl.glfw.GLFW.glfwSetScrollCallback;
@@ -97,9 +102,13 @@ public class Display {
     private static final long INITIAL_PRIMARY_MONITOR = glfwGetPrimaryMonitor();
     private static final DisplayMode INITIAL_PRIMARY_MONITOR_DISPLAY_MODE =
             DisplayMode.adapt(glfwGetVideoMode(INITIAL_PRIMARY_MONITOR));
+    private static final GammaRamp INITIAL_GAMMA_RAMP = GammaRamp.createFrom(glfwGetGammaRamp(INITIAL_PRIMARY_MONITOR));
 
     private static long window = NULL;
     private static boolean altitudeWantsToRecreateDisplay = false;
+
+    // FIELD GROUP: monitor state
+    private static Float gamma = null;
 
     // FIELD GROUP: window state that may be set before window is created, and thus needs to be retained here
     private static DisplayMode displayMode = null;
@@ -172,6 +181,7 @@ public class Display {
     private static void triggerUpdatesAfterModeChange() {
         WindowOperation.updateFloating(window, windowMode, focused);
         Mouse.setCapturedByDisplay(Objects.equals(windowMode, WindowMode.EXCLUSIVE_FULLSCREEN));
+        updateGamma();
     }
 
     public static void destroy() {
@@ -340,13 +350,40 @@ public class Display {
 
     @SuppressWarnings({"unused", "RedundantThrows"}) // lwjgl2 api signature retained for posterity
     public static void setDisplayConfiguration(float gamma, float brightness, float contrast) throws LWJGLException {
-        // unsupported for now: not that important?
+        // altitude will always pass brightness = 0 and contrast = 1, which in lwjgl2 is a no-op: consider only gamma
+        if (Objects.equals(gamma, Display.gamma)) {
+            return;
+        }
+        Display.gamma = gamma;
+        updateGamma();
+    }
+
+    private static void updateGamma() {
+        // if `INITIAL_GAMMA_RAMP` is null, getting the gamma ramp failed, and the gamma system therefore is unsupported
+        if (INITIAL_GAMMA_RAMP == null || Display.gamma == null) {
+            return;
+        }
+        // this condition is whether altitude considers the current mode to be exclusive fullscreen. we could support
+        // gamma correction always, but because altitude will not forward updated gamma values unless `isFullscreen`,
+        // we have to match altitude
+        if (Display.focused && isFullscreen()) {
+            MonitorOperation
+                    .setGammaRampFromLwjgl2Gamma(INITIAL_PRIMARY_MONITOR, INITIAL_GAMMA_RAMP.size(), Display.gamma);
+        } else {
+            try (GLFWGammaRamp ramp = INITIAL_GAMMA_RAMP.allocateAsGlfwRamp()) {
+                glfwSetGammaRamp(INITIAL_PRIMARY_MONITOR, ramp);
+            }
+        }
     }
 
     public static DisplayMode getDisplayMode() {
         return displayMode;
     }
 
+    /**
+     * Whether Altitude considers the current mode to be exclusive fullscreen. Not necessarily the same as the actual
+     * window mode.
+     */
     public static boolean isFullscreen() {
         // we support overriding or changing the display mode via properties, but that cannot affect how we communicate
         // with altitude, since the result here must match with what altitude expects from its actual settings
@@ -399,6 +436,7 @@ public class Display {
     private static void setFocused(boolean focused) {
         Display.focused = focused;
         WindowOperation.updateFloating(Display.window, windowMode, focused);
+        updateGamma();
     }
 
     // NOT DIRECTLY CALLED BY ALTITUDE

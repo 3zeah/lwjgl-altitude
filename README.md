@@ -54,7 +54,6 @@ After installation, _app/lib/lwjgl-altitude_ will contain the file _lwjgl-altitu
 
 No plans to support. But probably could be supported.
 
-* Gamma slider does nothing (requires understanding gamma and how safely to change it app-specifically)
 * Map editor not supported (requires implementing AWT rendering for LWJGL3)
 
 ## Details
