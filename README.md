@@ -17,7 +17,7 @@ Compatibility layer between LWJGL2 (legacy) and LWJGL3, tuned for the video game
    * macOS: _Altitude.app/Contents/app/_
    * Linux: _altitude/lib/app/_
 2. Download _lwjgl-altitude-\<version\>.zip_ from the latest release, or build it yourself according to the [Build section](#build)
-3. Extract the contents of _lwjgl-altitude-\<version\>.zip_ to the _app_ directory
+3. Extract the contents of _lwjgl-altitude-\<version\>.zip_ to the _app_ subdirectory (BEWARE: NOT to the root directory: use the directory found in step 1)
 4. Modify _Altitude.cfg_ in the _app_ directory
    * Replace the following lines
      * `app.classpath=$APPDIR\lib\lwjgl-2.9.3.jar`
@@ -40,6 +40,15 @@ After installation, _app/lib/lwjgl-altitude_ will contain the file _lwjgl-altitu
 | Property                     | Allowed values    | Effect                                                                                                                                                                                                                      |
 |------------------------------|-------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `prefer_windowed_fullscreen` | `true` or `false` | When true, the game is in windowed fullscreen whenever it is in fullscreen and the resolution matches the monitor. Normally, windowed fullscreen must be activated with a console command (`/testWindowedFullscreen true`). |
+
+## Troubleshoot
+
+### Game does not start
+If the game does not start at all, even after editing _Altitude.cfg_, ensure correct installation. If you extracted properly, the _app/lib_ directory should contain _lwjgl-altitude.jar_ and the _lwjgl-3_ and _lwjgl-altitude_ subdirectories. The _app/lib_ directory should ALSO contain a bunch of other Altitude jar files, that were there before, such as _lwjgl-2.9.3.jar_. The _app/native_ directory should contain several os-specific subdirectories, such as _windows_ and _linux_, ALONG with a bunch of other Altitude dll files, that were there before, such as _lwjgl.dll_.
+
+### Mod does nothing
+
+If you run the game along with the console, ie via _altitude-console.exe_, you need to edit _altitude-console.cfg_ in step 4 of [Quickstart](#quickstart), rather than _Altitude.cfg_.
 
 ## Build
 
