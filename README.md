@@ -56,6 +56,7 @@ If you run the game along with the console, ie via _altitude-console.exe_, you n
 
 ## Issues
 
+* Might not work at all on macOS... To even try, `java-options=-XstartOnFirstThread` must be added under `[JavaOptions]` in _Altitude.cfg_. I would love to fix this, but I do not have access to macOS.
 * Window icon is not initially set in taskbar when running Altitude with console, but is displayed in title bar, and works if set after creation (on my machine, Windows 11)
   * Is this related to https://github.com/glfw/glfw/issues/1163, for which we already have a workaround?
 
