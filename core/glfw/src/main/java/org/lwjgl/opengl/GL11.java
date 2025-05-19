@@ -15,6 +15,7 @@ import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
 import java.nio.ShortBuffer;
 
+import static org.lwjgl.glfw.GLFW.glfwGetFramebufferSize;
 import static org.lwjgl.system.Checks.CHECKS;
 import static org.lwjgl.system.Checks.check;
 import static org.lwjgl.system.Checks.checkSafe;
@@ -9960,7 +9961,17 @@ public class GL11 {
     }
 
     public static void glGetFloat(int pname, FloatBuffer params) {
-        glGetFloatv(pname, params);
+        // hack: altitude uses this to get the actual framebuffer size after a resolution change, but, because we do not
+        // reconstruct the entire window to change the resolution, as LWJGL2 did, GL does not yet know: ask GLFW
+        if (pname == GL11.GL_VIEWPORT) {
+            int[] width = new int[1];
+            int[] height = new int[1];
+            glfwGetFramebufferSize(Display.window(), width, height);
+            params.put(2, width[0]);
+            params.put(3, height[0]);
+        } else {
+            glGetFloatv(pname, params);
+        }
     }
 
     public static void glTexEnv(int target, int pname, FloatBuffer params) {
