@@ -56,7 +56,8 @@ If you run the game along with the console, ie via _altitude-console.exe_, you n
 
 ## Issues
 
-* Might not work at all on macOS... To even try, `java-options=-XstartOnFirstThread` must be added under `[JavaOptions]` in _Altitude.cfg_. I would love to fix this, but I do not have access to macOS.
+* Might not work at all on macOS... To even try, `java-options=-XstartOnFirstThread` must be added under `[JavaOptions]` in _Altitude.cfg_. I do not have access to macOS to test anything, though...
+  * I think the main problem is Altitude initializing AWT, which hogs the main window or AppKit thread or whatever, but GLFW also requires hogging that thread (hence `-XstartOnFirstThread`), and there is a deadlock. GLFW not playing nice with AWT and macOS is actually relatively well documented. Some seemingly related info at https://github.com/LWJGL/lwjgl3/issues/306, which suggests running with `-Djava.awt.headless=true` as a workaround for a similar issue.
 * Window icon is not initially set in taskbar when running Altitude with console, but is displayed in title bar, and works if set after creation (on my machine, Windows 11)
   * Is this related to https://github.com/glfw/glfw/issues/1163, for which we already have a workaround?
 
