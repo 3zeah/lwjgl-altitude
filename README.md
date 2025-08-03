@@ -9,6 +9,8 @@ Compatibility layer between LWJGL2 (legacy) and LWJGL3, tuned for the video game
 * Toggling fullscreen without second-long blackouts
 * Clicking parts of the screen do not randomly minimize the game
 * Crosshair constrained to window while mouse-aiming
+* Misc LWJGL2 bugs fixed
+  - Fixes: On Windows, mouse button 4 cannot be released while any other button is held
 
 ## Quickstart
 
