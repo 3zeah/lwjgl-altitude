@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.invoke.MethodHandles;
+import java.util.Optional;
 
 public class Properties {
 
@@ -31,6 +32,8 @@ public class Properties {
 
     private static final boolean PREFER_WINDOWED_FULLSCREEN =
             Boolean.parseBoolean(delegate.getProperty("prefer_windowed_fullscreen"));
+    private static final Optional<Integer> MONITOR =
+            Optional.ofNullable(delegate.getProperty("monitor")).map(Integer::parseInt);
 
     private Properties() {
         // static api
@@ -38,5 +41,9 @@ public class Properties {
 
     public static boolean preferWindowedFullscreen() {
         return PREFER_WINDOWED_FULLSCREEN;
+    }
+
+    public static Optional<Integer> monitor() {
+        return MONITOR;
     }
 }

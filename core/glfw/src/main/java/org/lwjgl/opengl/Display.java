@@ -36,6 +36,7 @@ import lwjglalti.render.MonitorOperation;
 import lwjglalti.render.Properties;
 import lwjglalti.render.WindowOperation;
 import lwjglalti.render.WindowOperation.WindowDefinition;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -49,9 +50,11 @@ import org.slf4j.LoggerFactory;
 
 import java.lang.invoke.MethodHandles;
 import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static java.util.Objects.requireNonNull;
 import static lwjglalti.util.LwjglAltitudeUtil.freeIfPresent;
 import static org.lwjgl.glfw.GLFW.GLFW_CENTER_CURSOR;
 import static org.lwjgl.glfw.GLFW.GLFW_DEPTH_BITS;
@@ -61,6 +64,8 @@ import static org.lwjgl.glfw.GLFW.GLFW_STENCIL_BITS;
 import static org.lwjgl.glfw.GLFW.GLFW_VISIBLE;
 import static org.lwjgl.glfw.GLFW.glfwDestroyWindow;
 import static org.lwjgl.glfw.GLFW.glfwGetGammaRamp;
+import static org.lwjgl.glfw.GLFW.glfwGetMonitorPos;
+import static org.lwjgl.glfw.GLFW.glfwGetMonitors;
 import static org.lwjgl.glfw.GLFW.glfwGetPrimaryMonitor;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoMode;
 import static org.lwjgl.glfw.GLFW.glfwGetVideoModes;
@@ -99,7 +104,9 @@ public class Display {
 
     // there is probably no good reason to cache the monitor mode this way, and will probably lead to issues if the
     // user changes resolution while running altitude, but unfortunately altitude will statically cache it regardless
-    private static final long INITIAL_PRIMARY_MONITOR = glfwGetPrimaryMonitor();
+    private static final long INITIAL_PRIMARY_MONITOR = Properties.monitor()
+            .map(requireNonNull(glfwGetMonitors(), "No monitors found")::get)
+            .orElse(glfwGetPrimaryMonitor());
     private static final DisplayMode INITIAL_PRIMARY_MONITOR_DISPLAY_MODE =
             DisplayMode.adapt(glfwGetVideoMode(INITIAL_PRIMARY_MONITOR));
     private static final GammaRamp INITIAL_GAMMA_RAMP = GammaRamp.createFrom(glfwGetGammaRamp(INITIAL_PRIMARY_MONITOR));
@@ -180,6 +187,12 @@ public class Display {
     }
 
     private static void triggerUpdatesAfterModeChange() {
+        if (windowMode == WindowMode.WINDOWED_FULLSCREEN) {
+            IntBuffer x = BufferUtils.createIntBuffer(1);
+            IntBuffer y = BufferUtils.createIntBuffer(1);
+            glfwGetMonitorPos(INITIAL_PRIMARY_MONITOR, x, y);
+            glfwSetWindowPos(window, x.get(), y.get());
+        }
         WindowOperation.updateFloating(window, windowMode, focused);
         Mouse.setCapturedByDisplay(Objects.equals(windowMode, WindowMode.EXCLUSIVE_FULLSCREEN));
         updateGamma();
